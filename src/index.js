@@ -1,5 +1,9 @@
 import express from 'express';
 import morgan from 'morgan';
+import { PORT } from './config/serverConfig.js';
+// import tweetRouter from './routes/tweets.js'
+import apiRouter from './routes/apiRouter.js'
+
 
 const app = express();
 
@@ -8,6 +12,9 @@ app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.text());
 // app.use(express.urlencoded())
+
+// app.use('/tweets', tweetRouter)
+app.use('/api', apiRouter)
 
 function mid1(req, res, next) {
     console.log("mid1");
@@ -39,28 +46,13 @@ app.get('/ping', middleware, (req, res) => {
     })
 });
 
-app.post('/hello', [mid1, mid2], (req, res) => {
-    console.log( "query params", req.query); // query params
-    console.log( "request body", req.body); // req body
-    return res.json({
-        message: "world"
-    })
-});
-
-app.get('/tweets/:tweet_id/comments/:comment_id', (req, res) => {
-    console.log(req.params) // url params
-    return res.json({
-        message: "tweet details"
-    })
-});
-
 app.use((req, res) => {
     return res.status(404).json({
         message: "not found"
     });
 });
 
-app.listen(3000, () => {
-    console.log("server is running on port 3000");
+app.listen(PORT, () => {
+    console.log(`server is running on port ${PORT}`);
     
 })
