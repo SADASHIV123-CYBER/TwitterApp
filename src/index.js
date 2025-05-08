@@ -1,8 +1,8 @@
 import express from 'express';
 import morgan from 'morgan';
 import { PORT } from './config/serverConfig.js';
-// import tweetRouter from './routes/tweets.js'
 import apiRouter from './routes/apiRouter.js'
+import connectDB from './config/dbConfig.js';
 
 
 const app = express();
@@ -11,9 +11,8 @@ app.use(morgan('combined'));
 
 app.use(express.json());
 app.use(express.text());
-// app.use(express.urlencoded())
+app.use(express.urlencoded())
 
-// app.use('/tweets', tweetRouter)
 app.use('/api', apiRouter)
 
 function mid1(req, res, next) {
@@ -54,5 +53,5 @@ app.use((req, res) => {
 
 app.listen(PORT, () => {
     console.log(`server is running on port ${PORT}`);
-    
+    connectDB();
 })
