@@ -1,5 +1,5 @@
 import express from 'express';
-import { createTwit, getTweetById, getTweets } from '../../controllers/tweetController.js';
+import { createTweet, getTweetById, getTweets } from '../../controllers/tweetController.js';
 import { validate } from '../../validator/zodValidator.js'
 import { tweetZodSchema } from '../../validator/tweetZodSchema.js';
 
@@ -9,6 +9,6 @@ router.get('/', getTweets)
 
 router.get('/:id', getTweetById);
 
-router.post('/', validate(tweetZodSchema) , createTwit);
+router.post('/', validate(tweetZodSchema) , createTweet);
 
 export default router;
