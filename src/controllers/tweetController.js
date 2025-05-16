@@ -1,17 +1,12 @@
-import { createTweet as createTweetService } from "../repository/tweetRepository.js"
-
-export const getTweets = (req, res) => {
-    return res.json({
-        message: "welcome to tweet route"
-    })
-}
-
-export const getTweetById = (req, res) => {
-    return res.json({
-        message: "welcome to the tweet route",
-        id: req.params.id
-    })
-}
+import { StatusCodes } from "http-status-codes"
+import { 
+    createTweet as createTweetService,
+    getTweet as getTweetsService,
+    getTweetById as getTweetByIdService,
+    deleteTweet as deleteTweetService,
+    updateTweet as updateTweetService
+} from "../services/twitServices.js";
+import { errorResponce, sucessResponce } from "../utils/responces.js";
 
 export const createTweet = async (req, res) => {
    try {
@@ -20,23 +15,49 @@ export const createTweet = async (req, res) => {
         body: req.body.body
     })
 
-    return res.status(200).json({
-        success: true, 
-        data: responce, 
-        message: "tweet created sucessfully"
-    })
-
+    return sucessResponce(responce, StatusCodes.CREATED, 'Tweet created successfully');
    } catch(error) {
-    console.log(error)
-    if(error.status) {
-        return res.status(error.status).json({
-            message: error.message,
-            success: false
-        });
-    }
-    return error.res.status(500).json({
-        message: "Internal server error",
-        success: false
-    })
+   return errorResponce(error)
    }
 }
+
+export const getTweet = async (req, res) => {
+    
+  try{
+    const responce = await getTweetsService();
+
+    return sucessResponce(responce, StatusCodes.OK, 'Tweets fetched successfully');
+  } catch(error) {
+   return errorResponce(error)
+  }
+}
+
+export const getTweetById = async(req, res) => {
+    try {
+        const responce = await getTweetByIdService(req.params.id);
+
+        return sucessResponce(responce, StatusCodes.OK, 'Tweets fetched successfully');
+        
+    } catch(error) {
+        return errorResponce(error)
+    }
+}
+
+export const deleteTweet = async (req, res) => {
+    try {
+        const responce = await deleteTweetService(req.params.id);
+        return sucessResponce(responce, StatusCodes.OK, 'Tweet deleted successfully');
+    } catch(error) {
+        return errorResponce(error)
+    }
+}
+
+export const updateTweet = async (req, res) => {
+    try {
+        const responce = await updateTweetService(req.params.id, req.body.body);
+        return sucessResponce(responce, StatusCodes.OK, 'Tweet updated successfully')
+    } catch(error) {
+         return errorResponce(error)
+    }
+}
+
